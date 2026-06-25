@@ -102,7 +102,8 @@
   .tag{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;opacity:1;color:var(--muted)}
   .panel h2{
     font-family:'Inter',system-ui,sans-serif;font-weight:800;
-    font-size:clamp(1.7rem,4vw,3rem);line-height:1.02;letter-spacing:-.02em;max-width:14ch;
+    font-size:clamp(1.7rem,4vw,3rem);line-height:1.06;letter-spacing:-.02em;max-width:14ch;
+    text-wrap:balance;
   }
   .panel p{font-size:clamp(.92rem,1.5vw,1.05rem);line-height:1.55;max-width:34ch;color:#355f56}
   .panel.online p{color:#5b6670}
@@ -141,7 +142,7 @@
 
   /* ── Mobile ────────────────────────────────────────────── */
   @media(max-width:760px){
-    .split{flex-direction:column;gap:14px;padding:4px 16px 20px}
+    .split{flex-direction:column;gap:14px;padding:4px 16px 14px;flex:none}
     .panel{flex:none;min-height:auto;border-radius:22px;
       box-shadow:0 8px 24px rgba(7,33,29,.10);
       flex-direction:row;align-items:center;gap:15px;padding:18px;text-align:left}
