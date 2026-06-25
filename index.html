@@ -15,6 +15,9 @@
     --teal:#0e7c6e;             /* brand teal for light bg */
     --store-1:#0e766a; --store-2:#15a48f; --store-accent:#ffce6a;
     --online-1:#07b09a; --online-2:#17cfb1; --online-accent:#ffffff;
+    /* light CTA panel backgrounds */
+    --store-bg-1:#daf0e4; --store-bg-2:#bce5d0;   /* green        */
+    --online-bg-1:#e2e6e9; --online-bg-2:#c9cfd5;  /* gray         */
     --mint:#e8f6f2; --line:rgba(7,33,29,.10);
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -52,45 +55,48 @@
   }
   .prompt h1{
     font-family:'Inter',system-ui,sans-serif;font-weight:700;
-    font-size:clamp(1.5rem,3.6vw,2.5rem);letter-spacing:-.02em;
-    margin:8px auto 0;line-height:1.1;color:var(--ink);
+    font-size:clamp(1.15rem,2.8vw,2.1rem);letter-spacing:-.02em;
+    margin:8px auto 0;line-height:1.15;color:var(--ink);
     max-width:26ch;
   }
 
   /* ── Split panels (the signature) ──────────────────────── */
   .split{display:flex;flex:1;min-height:0}
   .panel{
-    flex:1;position:relative;overflow:hidden;text-decoration:none;color:#fff;
-    display:flex;flex-direction:column;justify-content:center;
-    padding:clamp(30px,5vw,72px);gap:18px;
+    flex:1;position:relative;overflow:hidden;text-decoration:none;color:var(--ink);
+    display:flex;flex-direction:row;align-items:center;justify-content:center;
+    gap:clamp(18px,3vw,34px);
+    padding:clamp(30px,5vw,72px);
     transition:flex .55s cubic-bezier(.4,0,.2,1);
     border:none;
   }
-  .panel:focus-visible{outline:3px solid #fff;outline-offset:-6px}
-  .panel.store{background:linear-gradient(150deg,var(--store-1),var(--store-2))}
-  .panel.online{background:linear-gradient(150deg,var(--online-1),var(--online-2));align-items:flex-end;text-align:right}
+  .copy{display:flex;flex-direction:column;gap:16px;align-items:flex-start;max-width:34ch}
+  .panel:focus-visible{outline:3px solid var(--teal);outline-offset:-6px}
+  .panel.store{background:linear-gradient(150deg,var(--store-bg-1),var(--store-bg-2))}
+  .panel.online{background:linear-gradient(150deg,var(--online-bg-1),var(--online-bg-2));flex-direction:row-reverse}
+  .panel.online .copy{align-items:flex-end;text-align:right}
   .panel:hover{flex:1.45}
 
   /* ambient texture */
   .panel::after{
     content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(120% 90% at 90% 110%,rgba(255,255,255,.10),transparent 60%);
+    background:radial-gradient(120% 90% at 90% 110%,rgba(14,118,106,.10),transparent 60%);
     opacity:0;transition:opacity .55s;
   }
   .panel:hover::after{opacity:1}
 
   .ico{width:54px;height:54px;flex-shrink:0;transition:transform .5s}
   .panel:hover .ico{transform:translateY(-4px) scale(1.06)}
-  .panel.online .ico{align-self:flex-end}
 
-  .tag{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;opacity:.8}
+  .tag{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;opacity:1;color:var(--muted)}
   .panel h2{
     font-family:'Inter',system-ui,sans-serif;font-weight:800;
     font-size:clamp(1.7rem,4vw,3rem);line-height:1.02;letter-spacing:-.02em;max-width:14ch;
   }
-  .panel.online h2{margin-left:auto}
-  .panel p{font-size:clamp(.92rem,1.5vw,1.05rem);line-height:1.55;max-width:34ch;color:rgba(255,255,255,.88)}
-  .panel.online p{margin-left:auto}
+  .panel p{font-size:clamp(.92rem,1.5vw,1.05rem);line-height:1.55;max-width:34ch;color:#355f56}
+  .panel.online p{color:#5b6670}
+  .panel.online .tag{color:#6b7580}
+  .panel.online::after{background:radial-gradient(120% 90% at 90% 110%,rgba(75,85,99,.12),transparent 60%)}
 
   .cta{
     display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
@@ -99,8 +105,8 @@
     transition:gap .3s,transform .3s,box-shadow .3s;
   }
   .panel.online .cta{align-self:flex-end}
-  .store .cta{background:var(--store-accent);color:#3a2a05;box-shadow:0 10px 28px rgba(255,210,125,.28)}
-  .online .cta{background:#fff;color:var(--store-1);box-shadow:0 10px 28px rgba(0,0,0,.18)}
+  .store .cta{background:var(--store-1);color:#fff;box-shadow:0 10px 28px rgba(14,118,106,.30)}
+  .online .cta{background:var(--online-1);color:#fff;box-shadow:0 10px 28px rgba(7,176,154,.30)}
   .panel:hover .cta{gap:16px;transform:translateY(-2px)}
   .cta svg{width:18px;height:18px}
 
@@ -124,11 +130,22 @@
 
   /* ── Mobile ────────────────────────────────────────────── */
   @media(max-width:760px){
-    .split{flex-direction:column}
-    .panel{flex:none;min-height:46vh;text-align:left;align-items:flex-start}
-    .panel.online{align-items:flex-start;text-align:left}
-    .panel.online h2,.panel.online p,.panel.online .ico,.panel.online .cta{margin-left:0;align-self:flex-start}
+    .split{flex-direction:column;gap:14px;padding:4px 16px 20px}
+    .panel{flex:none;min-height:auto;border-radius:22px;
+      box-shadow:0 8px 24px rgba(7,33,29,.10);
+      flex-direction:row;align-items:center;gap:15px;padding:18px;text-align:left}
+    .panel.online{flex-direction:row}
+    .panel.online .copy{align-items:flex-start;text-align:left}
+    .panel.online .cta{align-self:flex-start}
     .panel:hover{flex:none}
+    .copy{gap:6px;max-width:none}
+    .panel .ico{width:22px;height:22px;padding:10px;border-radius:13px;
+      box-sizing:content-box;background:rgba(255,255,255,.6);align-self:center}
+    .panel.online .ico{background:rgba(255,255,255,.78)}
+    .panel h2{font-size:1.4rem;max-width:none}
+    .panel p{max-width:none}
+    .cta{padding:11px 20px;margin-top:5px}
+    .prompt{padding:16px 20px 8px}
     .seam{display:none}
   }
   @media(prefers-reduced-motion:reduce){
@@ -157,17 +174,20 @@
 
     <!-- CTA 1 : Call / Visit nearby store  →  set the link below (href) -->
     <a class="panel store" href="#" id="ctaStore" aria-label="Call or visit a nearby store">
-      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="#ffd27d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M7 18 9 8h30l2 10"/><path d="M9 18v22h30V18"/>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="#0e766a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18v22h30V18" fill="#0e766a" fill-opacity=".15"/>
+        <path d="M7 18 9 8h30l2 10" fill="#0e766a" fill-opacity=".3"/>
         <path d="M7 18a4 4 0 0 0 8 0 4 4 0 0 0 8 0 4 4 0 0 0 8 0 4 4 0 0 0 8 0"/>
-        <path d="M20 40V28h8v12"/>
+        <path d="M20 40V28h8v12" fill="#0e766a" fill-opacity=".45"/>
       </svg>
-      <span class="tag">Near you</span>
-      <h2>Call or visit a nearby store</h2>
-      <p>Pick up your medicine from a nearby Apollo Pharmacy.</p>
-      <span class="cta">Find a store
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </span>
+      <div class="copy">
+        <span class="tag">Near you</span>
+        <h2>Call or visit a nearby store</h2>
+        <p>Pick up your medicine from a nearby Apollo Pharmacy.</p>
+        <span class="cta">Find a store
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
     </a>
 
     <div class="seam" aria-hidden="true">
@@ -178,17 +198,19 @@
 
     <!-- CTA 2 : Order online  →  set the link below (href) -->
     <a class="panel online" href="#" id="ctaOnline" aria-label="Order online">
-      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="9" y="6" width="22" height="36" rx="4"/>
-        <path d="M18 10h4"/><circle cx="20" cy="36" r="1.4" fill="#fff" stroke="none"/>
+      <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="#4b5563" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="6" width="22" height="36" rx="4" fill="#4b5563" fill-opacity=".15"/>
+        <path d="M18 10h4"/><circle cx="20" cy="36" r="1.4" fill="#4b5563" stroke="none"/>
         <path d="M30 20l9 0 0 9"/><path d="M39 20l-10 10"/>
       </svg>
-      <span class="tag">Anywhere, anytime</span>
-      <h2>Order online</h2>
-      <p>Get your medicine in minutes at your doorstep.</p>
-      <span class="cta">Order online
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </span>
+      <div class="copy">
+        <span class="tag">Anywhere, anytime</span>
+        <h2>Order online</h2>
+        <p>Get your medicine in minutes at your doorstep.</p>
+        <span class="cta">Order online
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
     </a>
 
   </main>
