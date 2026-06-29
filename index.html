@@ -28,7 +28,7 @@
     --online-1:#07b09a; --online-2:#17cfb1; --online-accent:#ffffff;
     /* light CTA panel backgrounds (per team Figma) */
     --store-bg-1:#f6f1e9; --store-bg-2:#ece1d1;   /* warm cream */
-    --online-bg-1:#ecf6f0; --online-bg-2:#d7efe2;  /* light mint */
+    --online-bg-1:#2d8475; --online-bg-2:#0f3a2e;  /* dark teal→green */
     --mint:#e8f6f2; --line:rgba(7,33,29,.10);
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -107,9 +107,10 @@
     text-wrap:balance;
   }
   .panel p{font-size:clamp(.92rem,1.5vw,1.05rem);line-height:1.55;max-width:34ch;color:#355f56}
-  .panel.online p{color:#3f6358}
-  .panel.online .tag{color:var(--muted)}
-  .panel.online::after{background:radial-gradient(120% 90% at 90% 110%,rgba(14,118,106,.10),transparent 60%)}
+  .panel.online h2{color:#fff}
+  .panel.online p{color:rgba(255,255,255,.85)}
+  .panel.online .tag{color:rgba(255,255,255,.92)}
+  .panel.online::after{background:radial-gradient(120% 90% at 90% 110%,rgba(255,255,255,.08),transparent 60%)}
 
   .cta{
     display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
@@ -121,7 +122,7 @@
   .cta:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
   .panel.online .cta{align-self:flex-end}
   .store .cta{background:#1a1a1a;color:#fff;box-shadow:0 10px 28px rgba(0,0,0,.22)}
-  .online .cta{background:#15463a;color:#fff;box-shadow:0 10px 28px rgba(21,70,58,.30)}
+  .online .cta{background:#fff;color:#14352b;box-shadow:0 10px 28px rgba(0,0,0,.20)}
   .panel:hover .cta{gap:16px;transform:translateY(-2px)}
   .cta svg{width:18px;height:18px}
 
@@ -155,12 +156,15 @@
     .panel.online .cta{align-self:flex-start}
     .panel:hover{flex:none}
     .copy{gap:6px;max-width:none}
-    .panel .ico{width:36px;height:auto;padding:8px;border-radius:13px;
-      background:rgba(255,255,255,.6);align-self:center}
-    .panel.online .ico{background:rgba(255,255,255,.78)}
+    .panel .ico{width:50px;height:auto;align-self:center}
     .panel h2{font-size:1.125rem;max-width:none;letter-spacing:-.01em}
     .panel p{max-width:none}
-    .cta{padding:11px 20px;margin-top:5px}
+    .panel .cta{background:none;box-shadow:none;padding:0;margin-top:10px;border-radius:0;
+      font-weight:700;text-decoration:underline;text-underline-offset:4px;gap:5px}
+    .store .cta{color:#e0571f}
+    .online .cta{color:#fff}
+    .cta svg{width:16px;height:16px}
+    .panel:hover .cta{gap:5px;transform:none}
     .prompt{padding:16px 20px 8px}
     .seam{display:none}
   }
@@ -196,7 +200,7 @@
         <h2>Call or visit a nearby store</h2>
         <p>Pick up your medicine from a nearby Apollo Pharmacy.</p>
         <a class="cta" href="#" id="ctaStore">Find a store
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </div>
     </div>
@@ -215,7 +219,7 @@
         <h2>Get medicines delivered</h2>
         <p>Get your medicine in minutes at your doorstep.</p>
         <a class="cta" href="#" id="ctaOnline">Order Online
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         </a>
       </div>
     </div>
