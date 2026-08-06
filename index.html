@@ -1,1057 +1,476 @@
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apollo Knowledge Assessment</title>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Assessment</title>
 <style>
   :root{
-    --ink:#0E2230;
-    --ink-2:#3A5567;
-    --muted:#7C919E;
-    --paper:#EDF2F4;
-    --card:#FFFFFF;
-    --rule:#DCE4E7;
-    --rule-soft:#EDF1F3;
-    --vital:#00A06B;
-    --vital-dk:#00794F;
-    --vital-wash:#E6F5EF;
-    --alert:#C8402F;
-    --alert-wash:#FBEDEB;
-    --amber:#9A6B00;
-    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-    --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --ink:#16232e;
+    --paper:#f6f8f9;
+    --card:#ffffff;
+    --line:#dbe3e8;
+    --accent:#0e7c86;       /* petrol teal */
+    --accent-dark:#0a5b63;
+    --accent-soft:#e3f2f3;
+    --warn:#b3541e;
+    --ok:#2e7d32;
+    --muted:#5f7280;
+    --radius:14px;
+    font-size:16px;
   }
-
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
+  *{box-sizing:border-box;margin:0;padding:0}
   body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
     background:var(--paper);
     color:var(--ink);
-    font-family:var(--sans);
-    font-size:16px;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    padding:0 14px 64px;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:24px 16px 48px;
   }
+  header.brand{
+    width:100%;max-width:680px;margin-bottom:20px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .brand h1{font-size:1.15rem;font-weight:700;letter-spacing:.3px}
+  .brand .tag{font-size:.75rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+  .admin-link{font-size:.75rem;color:var(--muted);background:none;border:1px solid var(--line);
+    border-radius:20px;padding:6px 14px;cursor:pointer}
+  .admin-link:hover{border-color:var(--accent);color:var(--accent)}
 
-  .wrap{max-width:660px;margin:0 auto}
-
-  /* ---------- masthead : lab-report header ---------- */
-  .mast{
-    padding:26px 0 14px;
-  }
-  .mast .org{
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--vital-dk);
-    margin:0 0 8px;
-  }
-  .mast h1{
-    font-size:clamp(26px,6.4vw,38px);
-    line-height:1.06;
-    letter-spacing:-.032em;
-    font-weight:800;
-    margin:0;
-  }
-  .mast p.sub{
-    color:var(--ink-2);
-    margin:10px 0 0;
-    font-size:15px;
-    max-width:46ch;
-  }
-  .perf{
-    height:1px;
-    margin:18px 0 0;
-    background-image:linear-gradient(to right,var(--rule) 0 6px,transparent 6px 12px);
-    background-size:12px 1px;
-  }
-
-  /* ---------- card ---------- */
   .card{
-    background:var(--card);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:22px 20px;
-    margin-top:18px;
+    width:100%;max-width:680px;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;box-shadow:0 2px 10px rgba(22,35,46,.05);
   }
-  .card + .card{margin-top:14px}
+  .card h2{font-size:1.4rem;margin-bottom:6px}
+  .card p.sub{color:var(--muted);font-size:.92rem;margin-bottom:22px;line-height:1.5}
 
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:10.5px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin:0 0 14px;
-  }
-  h2.sect{
-    font-size:19px;
-    letter-spacing:-.015em;
-    font-weight:700;
-    margin:0 0 4px;
-  }
-
-  /* ---------- form ---------- */
-  .field{margin-bottom:16px}
-  .field label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    letter-spacing:.01em;
-    margin-bottom:6px;
-  }
-  .field .hint{
-    font-weight:400;
-    color:var(--muted);
-    font-size:12px;
-    margin-left:6px;
-  }
+  label{display:block;font-size:.8rem;font-weight:600;letter-spacing:.04em;margin-bottom:6px;color:var(--ink)}
   input[type=text],input[type=tel],input[type=password]{
-    width:100%;
-    padding:12px 13px;
-    font-size:16px;
-    font-family:var(--sans);
-    color:var(--ink);
-    background:#fff;
-    border:1px solid var(--rule);
-    border-radius:3px;
-    outline:none;
-    transition:border-color .12s,box-shadow .12s;
+    width:100%;padding:12px 14px;font-size:1rem;border:1.5px solid var(--line);
+    border-radius:10px;background:#fbfcfd;margin-bottom:16px;color:var(--ink);
   }
-  input.mono{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
-  input:focus{border-color:var(--vital);box-shadow:0 0 0 3px var(--vital-wash)}
-  input.bad{border-color:var(--alert);background:var(--alert-wash)}
-  .err{
-    color:var(--alert);
-    font-size:12.5px;
-    margin-top:6px;
-    display:none;
-  }
-  .err.on{display:block}
+  input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+  .err{color:var(--warn);font-size:.82rem;margin:-10px 0 14px;display:none}
 
-  /* ---------- buttons ---------- */
-  button{
-    font-family:var(--sans);
-    font-size:15px;
-    font-weight:650;
-    letter-spacing:.005em;
-    border-radius:3px;
-    border:1px solid transparent;
-    padding:12px 20px;
-    cursor:pointer;
-    transition:background .12s,border-color .12s,color .12s;
+  button.primary{
+    width:100%;padding:14px;font-size:1rem;font-weight:600;color:#fff;
+    background:var(--accent);border:none;border-radius:10px;cursor:pointer;
+    transition:background .15s;
   }
-  .btn-go{background:var(--vital);color:#fff;width:100%}
-  .btn-go:hover{background:var(--vital-dk)}
-  .btn-go:disabled{background:var(--rule);color:var(--muted);cursor:not-allowed}
-  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--rule)}
-  .btn-ghost:hover{border-color:var(--ink-2)}
-  .btn-ghost:disabled{color:var(--muted);cursor:not-allowed}
-  .btn-sm{font-size:13px;padding:8px 14px}
-  button:focus-visible,a:focus-visible,input:focus-visible,.opt:focus-visible,.tick:focus-visible{
-    outline:2px solid var(--vital-dk);outline-offset:2px;
+  button.primary:hover{background:var(--accent-dark)}
+  button.primary:disabled{background:#9db6ba;cursor:not-allowed}
+  button.ghost{
+    padding:12px 18px;font-size:.92rem;font-weight:600;color:var(--accent);
+    background:var(--accent-soft);border:none;border-radius:10px;cursor:pointer;
   }
+  button.ghost:hover{background:#d3eaeb}
+  button:focus-visible{outline:2px solid var(--accent-dark);outline-offset:2px}
 
-  /* ---------- signature : the tick strip ---------- */
-  .strip-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin-bottom:8px;
-  }
-  .strip-head b{color:var(--ink);font-weight:600}
-  .strip{
-    display:flex;
-    gap:2px;
-    align-items:flex-end;
-    height:26px;
-  }
-  .tick{
-    flex:1 1 0;
-    height:12px;
-    min-width:0;
-    padding:0;
-    border:0;
-    border-radius:1px;
-    background:var(--rule);
-    cursor:pointer;
-    transition:height .14s,background .14s;
-  }
-  .tick.done{background:var(--vital);height:18px}
-  .tick.here{background:var(--ink);height:26px}
-  .tick.here.done{background:var(--ink)}
-
-  /* ---------- question ---------- */
-  .qmeta{
-    display:flex;
-    gap:10px;
-    align-items:baseline;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--muted);
-    margin:0 0 12px;
-  }
-  .qmeta .num{color:var(--vital-dk);font-weight:600}
-  .qtext{
-    font-size:19px;
-    line-height:1.38;
-    letter-spacing:-.011em;
-    font-weight:600;
-    margin:0 0 18px;
-  }
-  .opts{display:flex;flex-direction:column;gap:8px}
+  /* quiz */
+  .progress-wrap{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .progress-bar{flex:1;height:8px;background:var(--line);border-radius:8px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--accent);width:0%;transition:width .25s}
+  .progress-num{font-size:.8rem;font-weight:700;color:var(--muted);white-space:nowrap}
+  .qtext{font-size:1.12rem;font-weight:600;line-height:1.5;margin-bottom:20px}
   .opt{
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-    text-align:left;
-    width:100%;
-    font-size:15.5px;
-    font-weight:450;
-    line-height:1.4;
-    color:var(--ink);
-    background:#fff;
-    border:1px solid var(--rule);
-    border-radius:3px;
-    padding:13px 14px;
-    cursor:pointer;
+    display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);
+    border-radius:10px;padding:13px 15px;margin-bottom:10px;cursor:pointer;
+    background:#fbfcfd;transition:border-color .12s,background .12s;font-size:.98rem;
   }
-  .opt:hover{border-color:var(--ink-2)}
-  .opt .key{
-    font-family:var(--mono);
-    font-size:12px;
-    font-weight:600;
-    color:var(--muted);
-    border:1px solid var(--rule);
-    border-radius:2px;
-    width:22px;
-    height:22px;
-    flex:0 0 22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:1px;
-  }
-  .opt.on{border-color:var(--vital);background:var(--vital-wash)}
-  .opt.on .key{background:var(--vital);border-color:var(--vital);color:#fff}
-  .opt.ok{border-color:var(--vital);background:var(--vital-wash)}
-  .opt.ok .key{background:var(--vital);border-color:var(--vital);color:#fff}
-  .opt.no{border-color:var(--alert);background:var(--alert-wash)}
-  .opt.no .key{background:var(--alert);border-color:var(--alert);color:#fff}
-  .opt[disabled]{cursor:default}
+  .opt:hover{border-color:var(--accent)}
+  .opt.selected{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+  .opt .dot{width:18px;height:18px;border:2px solid var(--line);border-radius:50%;flex:none}
+  .opt.selected .dot{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px #fff}
+  .nav-row{display:flex;gap:12px;margin-top:22px}
+  .nav-row .spacer{flex:1}
 
-  .navrow{display:flex;gap:10px;margin-top:20px}
-  .navrow button{flex:1}
+  /* result */
+  .score-hero{text-align:center;padding:14px 0 6px}
+  .score-ring{
+    width:150px;height:150px;border-radius:50%;margin:0 auto 18px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:8px solid var(--accent-soft);position:relative;
+  }
+  .score-ring b{font-size:2.4rem;color:var(--accent)}
+  .score-ring span{font-size:.75rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:1.3rem}
+  .stat span{font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .save-note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:8px}
+  .save-note.ok{color:var(--ok);font-weight:600}
+  .save-note.bad{color:var(--warn);font-weight:600}
 
-  /* ---------- result ---------- */
-  .score-slab{
-    text-align:center;
-    padding:26px 20px 22px;
-    border:1px solid var(--rule);
-    border-radius:4px;
-    background:#fff;
-    margin-top:18px;
-  }
-  .score-slab .band{
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    margin:0 0 14px;
-  }
-  .band.pass{color:var(--vital-dk)}
-  .band.fail{color:var(--amber)}
-  .score-big{
-    font-family:var(--mono);
-    font-size:clamp(46px,13vw,66px);
-    font-weight:700;
-    letter-spacing:-.04em;
-    line-height:1;
-    margin:0;
-  }
-  .score-big .of{color:var(--muted);font-size:.44em;letter-spacing:0}
-  .score-pct{
-    font-family:var(--mono);
-    font-size:14px;
-    color:var(--ink-2);
-    margin:10px 0 0;
-    letter-spacing:.04em;
-  }
-  .readout{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    border-top:1px solid var(--rule);
-    margin-top:20px;
-  }
-  .readout div{
-    padding:14px 6px 2px;
-    text-align:center;
-    border-right:1px solid var(--rule-soft);
-  }
-  .readout div:last-child{border-right:0}
-  .readout .k{
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--muted);
-    display:block;
-    margin-bottom:4px;
-  }
-  .readout .v{font-family:var(--mono);font-size:17px;font-weight:600}
+  /* admin */
+  table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:14px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left}
+  th{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .table-wrap{overflow-x:auto}
+  .admin-tools{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .empty-msg{color:var(--muted);font-size:.9rem;text-align:center;padding:26px 0}
 
-  .idcard{
-    display:grid;
-    grid-template-columns:auto 1fr;
-    gap:6px 16px;
-    font-size:14px;
-    margin-top:4px;
+  .hidden{display:none}
+  .banner{
+    background:var(--accent-soft);border:1px solid var(--accent);
+    color:var(--accent-dark);border-radius:10px;padding:12px 15px;
+    font-size:.88rem;margin-bottom:18px;line-height:1.45;
   }
-  .idcard dt{
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--muted);
-    padding-top:3px;
+  .banner.warn{background:#fdf1e8;border-color:var(--warn);color:var(--warn)}
+  @media (max-width:520px){
+    .card{padding:20px}
+    .stat-grid{grid-template-columns:1fr 1fr}
   }
-  .idcard dd{margin:0;font-weight:600}
-  .idcard dd.mono{font-family:var(--mono);letter-spacing:.04em}
-
-  .review-q{border-top:1px solid var(--rule-soft);padding:16px 0 4px}
-  .review-q:first-of-type{border-top:0}
-  .rq-head{
-    display:flex;gap:9px;align-items:baseline;
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;margin-bottom:7px;
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important}
   }
-  .rq-head .mark{font-weight:700}
-  .mark.ok{color:var(--vital-dk)}
-  .mark.no{color:var(--alert)}
-  .mark.skip{color:var(--amber)}
-  .rq-text{font-size:15.5px;font-weight:600;margin:0 0 9px;line-height:1.4}
-  .rq-line{font-size:14px;margin:0 0 3px;color:var(--ink-2)}
-  .rq-line b{color:var(--ink);font-weight:600}
-
-  /* ---------- notices ---------- */
-  .notice{
-    border-left:3px solid var(--vital);
-    background:var(--vital-wash);
-    padding:12px 14px;
-    border-radius:0 3px 3px 0;
-    font-size:14px;
-    margin-top:14px;
-  }
-  .notice.warn{border-left-color:var(--amber);background:#FBF4E3}
-  .notice.bad{border-left-color:var(--alert);background:var(--alert-wash)}
-  .notice p{margin:0}
-  .notice p + p{margin-top:6px}
-
-  .brief{list-style:none;padding:0;margin:0}
-  .brief li{
-    display:flex;gap:12px;
-    padding:9px 0;
-    border-top:1px solid var(--rule-soft);
-    font-size:14.5px;
-  }
-  .brief li:first-child{border-top:0}
-  .brief .lk{
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--muted);
-    flex:0 0 96px;padding-top:2px;
-  }
-
-  /* ---------- admin ---------- */
-  .tablewrap{overflow-x:auto;margin-top:14px;border:1px solid var(--rule);border-radius:3px}
-  table{border-collapse:collapse;width:100%;font-size:13.5px}
-  th,td{padding:9px 11px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--rule-soft)}
-  th{
-    font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--muted);
-    background:#F7FAFB;position:sticky;top:0;
-  }
-  td.mono{font-family:var(--mono);font-size:12.5px}
-  tr:last-child td{border-bottom:0}
-  .csvbox{
-    width:100%;height:150px;margin-top:12px;
-    font-family:var(--mono);font-size:11.5px;
-    border:1px solid var(--rule);border-radius:3px;padding:10px;
-    color:var(--ink-2);background:#F9FBFB;resize:vertical;
-  }
-
-  footer{
-    text-align:center;
-    margin-top:26px;
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--muted);
-  }
-  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
-  footer a:hover{color:var(--ink)}
-
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .row > *{flex:1 1 160px}
-  .hide{display:none !important}
-  .spin{color:var(--muted);font-size:14px;margin-top:12px}
-
-  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
 </style>
+</head>
+<body>
 
-<div class="wrap">
-
-  <div class="mast">
-    <p class="org">Apollo Health &amp; Retail · Internal</p>
-    <h1>Knowledge Assessment</h1>
-    <p class="sub" id="mastSub">Thirty questions on the Apollo ecosystem, digital platforms and doctor business. Your score appears the moment you submit.</p>
-    <div class="perf"></div>
+<header class="brand">
+  <div>
+    <h1 id="quizTitle">Candidate Assessment</h1>
+    <div class="tag">Online Test Portal</div>
   </div>
+  <button class="admin-link" onclick="openAdminLogin()">Admin</button>
+</header>
 
-  <!-- ============ SCREEN 1 : REGISTER ============ -->
-  <section id="scRegister">
-    <div class="card">
-      <p class="eyebrow">Before you begin</p>
-      <ul class="brief">
-        <li><span class="lk">Questions</span><span><b>30</b> multiple choice, one correct answer each</span></li>
-        <li><span class="lk">Time</span><span>No limit. Your time taken is recorded.</span></li>
-        <li><span class="lk">Attempts</span><span id="briefAttempts">One attempt per employee code</span></li>
-        <li><span class="lk">Scoring</span><span>1 mark per correct answer. No negative marking.</span></li>
-      </ul>
-    </div>
+<!-- ══════════ SCREEN 1 : CANDIDATE DETAILS ══════════ -->
+<section class="card" id="screenDetails">
+  <h2>Candidate details</h2>
+  <p class="sub">Fill in your details below, then press <b>Start test</b>. You can attempt the test only once.</p>
 
-    <div class="card">
-      <p class="eyebrow">Your details</p>
-      <h2 class="sect">Identify yourself</h2>
-      <p style="color:var(--ink-2);font-size:14px;margin:4px 0 18px">These details are attached to your score, so please check them carefully.</p>
+  <label for="empCode">Employee code</label>
+  <input type="text" id="empCode" placeholder="e.g. EMP1023" autocomplete="off" maxlength="20">
 
-      <div class="field">
-        <label for="fName">Full name</label>
-        <input type="text" id="fName" autocomplete="name" placeholder="As per your Apollo records">
-        <p class="err" id="eName">Enter your full name.</p>
-      </div>
+  <label for="mobile">Mobile number</label>
+  <input type="tel" id="mobile" placeholder="10-digit mobile number" autocomplete="off" maxlength="10" inputmode="numeric">
 
-      <div class="field">
-        <label for="fEmp">Employee code</label>
-        <input type="text" id="fEmp" class="mono" autocomplete="off" placeholder="e.g. AP10482" maxlength="20">
-        <p class="err" id="eEmp">Enter your employee code.</p>
-      </div>
+  <label for="fullName">Full name</label>
+  <input type="text" id="fullName" placeholder="Your full name" autocomplete="off" maxlength="60">
 
-      <div class="field">
-        <label for="fMob">Mobile number <span class="hint">10 digits</span></label>
-        <input type="tel" id="fMob" class="mono" inputmode="numeric" autocomplete="tel" placeholder="9876543210" maxlength="10">
-        <p class="err" id="eMob">Enter a valid 10-digit mobile number.</p>
-      </div>
+  <div class="err" id="detailErr"></div>
+  <button class="primary" id="startBtn" onclick="startTest()">Start test</button>
+</section>
 
-      <div id="regNotice"></div>
+<!-- ══════════ SCREEN 2 : QUIZ ══════════ -->
+<section class="card hidden" id="screenQuiz">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    <div class="progress-num" id="progNum">1 / 10</div>
+  </div>
+  <div class="qtext" id="qText"></div>
+  <div id="optBox"></div>
+  <div class="nav-row">
+    <button class="ghost" id="prevBtn" onclick="prevQ()">← Previous</button>
+    <div class="spacer"></div>
+    <button class="ghost" id="nextBtn" onclick="nextQ()">Next →</button>
+    <button class="primary hidden" id="submitBtn" style="width:auto;padding:12px 26px" onclick="submitTest()">Submit test</button>
+  </div>
+</section>
 
-      <button class="btn-go" id="btnStart" style="margin-top:6px">Start assessment</button>
-      <p class="spin hide" id="regBusy">Checking your record…</p>
-    </div>
-  </section>
+<!-- ══════════ SCREEN 3 : RESULT ══════════ -->
+<section class="card hidden" id="screenResult">
+  <div class="score-hero">
+    <div class="score-ring"><b id="scoreVal">0</b><span>Score</span></div>
+    <h2 id="resultName" style="margin-bottom:4px"></h2>
+    <p class="sub" id="resultMeta" style="margin-bottom:6px"></p>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><b id="stTotal">0</b><span>Total questions</span></div>
+    <div class="stat"><b id="stAttempt">0</b><span>Attempted</span></div>
+    <div class="stat"><b id="stCorrect">0</b><span>Correct</span></div>
+  </div>
+  <div class="save-note" id="saveNote">Saving your record…</div>
+</section>
 
-  <!-- ============ SCREEN 2 : QUIZ ============ -->
-  <section id="scQuiz" class="hide">
-    <div class="card">
-      <div class="strip-head">
-        <span>Answered <b id="stripDone">0</b> of <b id="stripTot">30</b></span>
-        <span id="stripWho"></span>
-      </div>
-      <div class="strip" id="strip"></div>
-    </div>
+<!-- ══════════ ADMIN LOGIN ══════════ -->
+<section class="card hidden" id="screenAdminLogin">
+  <h2>Admin access</h2>
+  <p class="sub">Enter the admin passcode to view all candidate records.</p>
+  <label for="adminPass">Passcode</label>
+  <input type="password" id="adminPass" placeholder="Passcode">
+  <div class="err" id="adminErr">Incorrect passcode.</div>
+  <button class="primary" onclick="checkAdmin()">View records</button>
+  <div style="text-align:center;margin-top:14px">
+    <button class="ghost" onclick="backHome()">← Back</button>
+  </div>
+</section>
 
-    <div class="card">
-      <div class="qmeta">
-        <span class="num" id="qNum">Q01</span>
-        <span id="qSect">Apollo Ecosystem</span>
-      </div>
-      <p class="qtext" id="qText"></p>
-      <div class="opts" id="qOpts"></div>
-
-      <div class="navrow">
-        <button class="btn-ghost" id="btnPrev">Back</button>
-        <button class="btn-ghost" id="btnNext">Next</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div id="submitNotice"></div>
-      <button class="btn-go" id="btnSubmit" style="margin-top:12px">Submit and see score</button>
-      <p class="spin hide" id="quizBusy">Saving your response…</p>
-    </div>
-  </section>
-
-  <!-- ============ SCREEN 3 : RESULT ============ -->
-  <section id="scResult" class="hide">
-    <div class="score-slab">
-      <p class="band" id="resBand">Result recorded</p>
-      <p class="score-big"><span id="resScore">0</span><span class="of"> / <span id="resTotal">30</span></span></p>
-      <p class="score-pct" id="resPct">0%</p>
-      <div class="readout">
-        <div><span class="k">Attempted</span><span class="v" id="resAtt">0</span></div>
-        <div><span class="k">Correct</span><span class="v" id="resCor">0</span></div>
-        <div><span class="k">Time</span><span class="v" id="resTime">0m</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <p class="eyebrow">Recorded against</p>
-      <dl class="idcard">
-        <dt>Name</dt><dd id="resName"></dd>
-        <dt>Emp code</dt><dd class="mono" id="resEmp"></dd>
-        <dt>Mobile</dt><dd class="mono" id="resMob"></dd>
-        <dt>Submitted</dt><dd class="mono" id="resWhen"></dd>
-      </dl>
-      <div id="saveNotice"></div>
-    </div>
-
-    <div class="card" id="reviewCard">
-      <p class="eyebrow">Answer review</p>
-      <h2 class="sect" style="margin-bottom:14px">Where you stood</h2>
-      <div id="reviewList"></div>
-    </div>
-  </section>
-
-  <!-- ============ SCREEN 4 : ADMIN ============ -->
-  <section id="scAdmin" class="hide">
-    <div class="card" id="adminGate">
-      <p class="eyebrow">Restricted</p>
-      <h2 class="sect">Administrator access</h2>
-      <p style="color:var(--ink-2);font-size:14px;margin:4px 0 16px">Enter the passcode to view every submitted result.</p>
-      <div class="field">
-        <label for="fPass">Passcode</label>
-        <input type="password" id="fPass" class="mono" autocomplete="off">
-        <p class="err" id="ePass">That passcode is not correct.</p>
-      </div>
-      <div class="row">
-        <button class="btn-go" id="btnPass">Open results</button>
-        <button class="btn-ghost" id="btnPassBack">Back to start</button>
-      </div>
-    </div>
-
-    <div class="card hide" id="adminPanel">
-      <p class="eyebrow">All submissions</p>
-      <h2 class="sect" id="adminCount">Loading…</h2>
-      <p class="spin" id="adminBusy"></p>
-
-      <div class="row" style="margin-top:14px">
-        <button class="btn-ghost btn-sm" id="btnRefresh">Refresh</button>
-        <button class="btn-ghost btn-sm" id="btnCsv">Build CSV</button>
-        <button class="btn-ghost btn-sm" id="btnCopy">Copy CSV</button>
-        <button class="btn-ghost btn-sm" id="btnAdminBack">Back to start</button>
-      </div>
-
-      <div class="tablewrap"><table id="adminTable"></table></div>
-      <textarea class="csvbox hide" id="csvBox" readonly spellcheck="false"></textarea>
-    </div>
-  </section>
-
-  <footer>
-    <a href="#" id="adminLink">Administrator</a>
-  </footer>
-</div>
+<!-- ══════════ ADMIN PANEL ══════════ -->
+<section class="card hidden" id="screenAdmin" style="max-width:860px">
+  <h2>Candidate records</h2>
+  <p class="sub" id="recCount">Loading…</p>
+  <div class="table-wrap">
+    <table id="recTable">
+      <thead>
+        <tr><th>#</th><th>Emp code</th><th>Name</th><th>Mobile</th><th>Total Q</th><th>Attempted</th><th>Score</th><th>%</th><th>Date & time</th></tr>
+      </thead>
+      <tbody id="recBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-msg hidden" id="emptyMsg">No candidates have taken the test yet.</div>
+  <div class="admin-tools">
+    <button class="ghost" onclick="downloadCSV()">Download CSV (Excel)</button>
+    <button class="ghost" onclick="loadRecords()">Refresh</button>
+    <button class="ghost" onclick="backHome()">← Back</button>
+  </div>
+</section>
 
 <script>
-/* ============================================================
-   CONFIG — change these before you share the link
-   ============================================================ */
-const CONFIG = {
-  adminPasscode : "APOLLO2026",  // change this
-  passMark      : 60,            // percent needed to pass
-  shuffle       : true,          // randomise question order per candidate
-  showReview    : true,          // show correct answers after submit
-  oneAttempt    : true           // block a second attempt on the same emp code
-};
+/* ════════════════════════════════════════════════════════════
+   ▼▼▼  EDIT THIS SECTION ONLY — put your own settings here  ▼▼▼
+   ════════════════════════════════════════════════════════════ */
+const QUIZ_TITLE   = "Apollo Training Assessment";   // shown at top
+const ADMIN_PASS   = "254177083";              // change this passcode
+const ONE_ATTEMPT  = true;                     // true = each Emp Code can attempt only once
 
-/* ============================================================
-   QUESTION BANK
-   ============================================================ */
+/* QUESTIONS — replace these SAMPLE questions with your real ones.
+   "answer" is the index of the correct option: 0 = first, 1 = second, 2 = third, 3 = fourth */
 const QUESTIONS = [
-  {s:"Apollo Ecosystem", q:"Who is the Founder Chairman of Apollo Hospitals Group?",
-   o:["Dr. Devi Shetty","Dr. Prathap C. Reddy","Dr. Naresh Trehan","Dr. Kiran Mazumdar Shaw"], a:1},
-  {s:"Apollo Ecosystem", q:"Apollo Group has served approximately how many people?",
-   o:["50 Million","100 Million","150 Million","200 Million+"], a:3},
-  {s:"Apollo Ecosystem", q:"Approximately how many Apollo Hospitals are part of the ecosystem?",
-   o:["40","60","80+","150"], a:2},
-  {s:"Apollo Ecosystem", q:"Apollo Pharmacy currently has approximately how many stores across India?",
-   o:["3,000","5,000","7,492+","10,000"], a:2},
-  {s:"Apollo Ecosystem", q:"Apollo Pharmacy aims to expand its network to how many stores in the next five years?",
-   o:["8,000","9,000","10,000","12,000"], a:2},
-
-  {s:"Apollo 24|7", q:"Apollo 24|7 provides home sample collection within approximately:",
-   o:["1 hour","30 minutes","2 hours","Same day"], a:1},
-  {s:"Apollo 24|7", q:"Apollo 24|7 has over ______ registered users.",
-   o:["5 Million","10 Million","20 Million+","50 Million"], a:2},
-  {s:"Apollo 24|7", q:"Approximately how many medical professionals are available on Apollo 24|7?",
-   o:["5,000","8,000","13,000+","20,000"], a:2},
-
-  {s:"Future Vision of DocVerse", q:"Which of the following is NOT a pillar of DocVerse?",
-   o:["Rx Scanning","Clinic Touchpoints","Hospital Construction","Doctor Digital Value Addition"], a:2},
-  {s:"Future Vision of DocVerse", q:"One objective of DocVerse Screens is:",
-   o:["Entertainment","Capex Recovery through monetization","CCTV Monitoring","Inventory Management"], a:1},
-
-  {s:"Google Business Profile", q:"Which information is available on a Google Business Profile?",
-   o:["Business Hours","Reviews","Phone Number","All of the above"], a:3},
-  {s:"Google Business Profile", q:"Google Business Profile optimization helps improve:",
-   o:["Local Visibility","Electricity Consumption","Staff Productivity","Clinic Rent"], a:0},
-  {s:"Google Business Profile", q:"Which content can be regularly uploaded on Google Business Profile?",
-   o:["Posts","Movies","Salary Slips","Medical Licenses"], a:0},
-  {s:"Google Business Profile", q:"Which photo is added automatically by Google?",
-   o:["Doctor Portrait","Clinic Logo","Street View","Staff Photograph"], a:2},
-
-  {s:"Apollo Doctor App", q:"Apollo Doctor App allows doctors to:",
-   o:["View Reviews","Manage Ratings","Access Patient Details","All of the above"], a:3},
-  {s:"Apollo Doctor App", q:"Which dashboard is available inside the Apollo Doctor App?",
-   o:["Sales Dashboard","IVR CRM Dashboard","Inventory Dashboard","Finance Dashboard"], a:1},
-
-  {s:"Apollo Pharmacy", q:"Approximately what percentage of Apollo Pharmacy stores are located in South India?",
-   o:["45%","55%","64%","80%"], a:2},
-  {s:"Apollo Pharmacy", q:"Apollo Pharmacy services approximately what percentage of India's PIN codes?",
-   o:["30%","45%","60%","90%"], a:2},
-  {s:"Apollo Pharmacy", q:"Apollo Pharmacy operates across approximately how many cities and towns?",
-   o:["500","800","1,200+","2,000"], a:2},
-  {s:"Apollo Pharmacy", q:"Typical Apollo Pharmacy store size is approximately:",
-   o:["150 sq. ft.","300 sq. ft.","500 sq. ft.","1000 sq. ft."], a:1},
-
-  {s:"Doctor Qualifications", q:"MBBS doctors are generally known as:",
-   o:["Surgeons","General Practitioners","Dentists","AYUSH Doctors"], a:1},
-  {s:"Doctor Qualifications", q:"FMG stands for:",
-   o:["Foreign Medical Graduate","Family Medical Graduate","Final Medical Graduate","Federal Medical Graduate"], a:0},
-  {s:"Doctor Qualifications", q:"A doctor who has completed MD is considered a:",
-   o:["Technician","Specialist","Pharmacist","Therapist"], a:1},
-  {s:"Doctor Qualifications", q:"Which registration is mandatory for MBBS doctors to practice?",
-   o:["Income Tax Department","State Medical Council","Municipal Corporation","Pharmacy Council"], a:1},
-  {s:"Doctor Qualifications", q:"Which of the following belongs to the AYUSH system?",
-   o:["Ayurveda","Homeopathy","Unani","All of the above"], a:3},
-
-  {s:"Doctor Business", q:"Which is NOT a doctor practice model?",
-   o:["Independent Clinic","Hospital Consultant","Visiting Consultant","Retail Distributor"], a:3},
-  {s:"Doctor Business", q:"Which of the following is a clinic investment?",
-   o:["Medical Equipment","Staff Salaries","Software/EMR","All of the above"], a:3},
-  {s:"Doctor Business", q:"Which of the following is a revenue stream for doctors?",
-   o:["Consultation Fees","Diagnostics","Teleconsultation","All of the above"], a:3},
-  {s:"Doctor Business", q:"Which is an important patient acquisition channel?",
-   o:["Google Business Profile","Referrals","Social Media","All of the above"], a:3},
-  {s:"Doctor Business", q:"According to the training, why do doctors invest in patient acquisition?",
-   o:["To increase electricity usage","To sustain and grow their practice","To reduce consultation fees","To increase clinic rent"], a:1}
+  /* ── Apollo Ecosystem ── */
+  { q:"Who is the Founder Chairman of Apollo Hospitals Group?",
+    options:["Dr. Devi Shetty","Dr. Prathap C. Reddy","Dr. Naresh Trehan","Dr. Kiran Mazumdar Shaw"], answer:1 },
+  { q:"Apollo Group has served approximately how many people?",
+    options:["50 Million","100 Million","150 Million","200 Million+"], answer:3 },
+  { q:"Approximately how many Apollo Hospitals are part of the ecosystem?",
+    options:["40","60","80+","150"], answer:2 },
+  { q:"Apollo Pharmacy currently has approximately how many stores across India?",
+    options:["3,000","5,000","7,492+","10,000"], answer:2 },
+  { q:"Apollo Pharmacy aims to expand its network to how many stores in the next five years?",
+    options:["8,000","9,000","10,000","12,000"], answer:2 },
+  /* ── Apollo 24|7 ── */
+  { q:"Apollo 24|7 provides home sample collection within approximately:",
+    options:["1 hour","30 minutes","2 hours","Same day"], answer:1 },
+  { q:"Apollo 24|7 has over ______ registered users.",
+    options:["5 Million","10 Million","20 Million+","50 Million"], answer:2 },
+  { q:"Approximately how many medical professionals are available on Apollo 24|7?",
+    options:["5,000","8,000","13,000+","20,000"], answer:2 },
+  /* ── Future Vision of DocVerse ── */
+  { q:"Which of the following is NOT a pillar of DocVerse?",
+    options:["Rx Scanning","Clinic Touchpoints","Hospital Construction","Doctor Digital Value Addition"], answer:2 },
+  { q:"One objective of DocVerse Screens is:",
+    options:["Entertainment","Capex Recovery through monetization","CCTV Monitoring","Inventory Management"], answer:1 },
+  /* ── Google Business Profile ── */
+  { q:"Which information is available on a Google Business Profile?",
+    options:["Business Hours","Reviews","Phone Number","All of the above"], answer:3 },
+  { q:"Google Business Profile optimization helps improve:",
+    options:["Local Visibility","Electricity Consumption","Staff Productivity","Clinic Rent"], answer:0 },
+  { q:"Which content can be regularly uploaded on Google Business Profile?",
+    options:["Posts","Movies","Salary Slips","Medical Licenses"], answer:0 },
+  { q:"Which photo is added automatically by Google?",
+    options:["Doctor Portrait","Clinic Logo","Street View","Staff Photograph"], answer:2 },
+  /* ── Apollo Doctor App ── */
+  { q:"Apollo Doctor App allows doctors to:",
+    options:["View Reviews","Manage Ratings","Access Patient Details","All of the above"], answer:3 },
+  { q:"Which dashboard is available inside the Apollo Doctor App?",
+    options:["Sales Dashboard","IVR CRM Dashboard","Inventory Dashboard","Finance Dashboard"], answer:1 },
+  /* ── Apollo Pharmacy ── */
+  { q:"Approximately what percentage of Apollo Pharmacy stores are located in South India?",
+    options:["45%","55%","64%","80%"], answer:2 },
+  { q:"Apollo Pharmacy services approximately what percentage of India's PIN codes?",
+    options:["30%","45%","60%","90%"], answer:2 },
+  { q:"Apollo Pharmacy operates across approximately how many cities and towns?",
+    options:["500","800","1,200+","2,000"], answer:2 },
+  { q:"Typical Apollo Pharmacy store size is approximately:",
+    options:["150 sq. ft.","300 sq. ft.","500 sq. ft.","1000 sq. ft."], answer:1 },
+  /* ── Doctor Qualifications ── */
+  { q:"MBBS doctors are generally known as:",
+    options:["Surgeons","General Practitioners","Dentists","AYUSH Doctors"], answer:1 },
+  { q:"FMG stands for:",
+    options:["Foreign Medical Graduate","Family Medical Graduate","Final Medical Graduate","Federal Medical Graduate"], answer:0 },
+  { q:"A doctor who has completed MD is considered a:",
+    options:["Technician","Specialist","Pharmacist","Therapist"], answer:1 },
+  { q:"Which registration is mandatory for MBBS doctors to practice?",
+    options:["Income Tax Department","State Medical Council","Municipal Corporation","Pharmacy Council"], answer:1 },
+  { q:"Which of the following belongs to the AYUSH system?",
+    options:["Ayurveda","Homeopathy","Unani","All of the above"], answer:3 },
+  /* ── Doctor Business ── */
+  { q:"Which is NOT a doctor practice model?",
+    options:["Independent Clinic","Hospital Consultant","Visiting Consultant","Retail Distributor"], answer:3 },
+  { q:"Which of the following is a clinic investment?",
+    options:["Medical Equipment","Staff Salaries","Software/EMR","All of the above"], answer:3 },
+  { q:"Which of the following is a revenue stream for doctors?",
+    options:["Consultation Fees","Diagnostics","Teleconsultation","All of the above"], answer:3 },
+  { q:"Which is an important patient acquisition channel?",
+    options:["Google Business Profile","Referrals","Social Media","All of the above"], answer:3 },
+  { q:"According to the training, why do doctors invest in patient acquisition?",
+    options:["To increase electricity usage","To sustain and grow their practice","To reduce consultation fees","To increase clinic rent"], answer:1 },
 ];
+/* ════════════════════════════════════════════════════════════
+   ▲▲▲  END OF EDITABLE SECTION  ▲▲▲
+   ════════════════════════════════════════════════════════════ */
 
-QUESTIONS.forEach((q,i)=>q.id = i+1);
-const KEYS = ["A","B","C","D"];
-const PREFIX = "apollo-assess:v1:";
+document.getElementById("quizTitle").textContent = QUIZ_TITLE;
+document.title = QUIZ_TITLE;
 
-/* ============================================================
-   STATE
-   ============================================================ */
-const S = {
-  candidate : null,
-  order     : [],
-  answers   : {},   // { questionId : optionIndex }
-  cursor    : 0,
-  startedAt : null,
-  submitted : false
-};
+let candidate = null;
+let answers   = new Array(QUESTIONS.length).fill(null);
+let current   = 0;
+let submitted = false;
 
-const $  = id => document.getElementById(id);
-const el = (t,c,x)=>{const n=document.createElement(t); if(c)n.className=c; if(x!=null)n.textContent=x; return n;};
+const $ = id => document.getElementById(id);
+const screens = ["screenDetails","screenQuiz","screenResult","screenAdminLogin","screenAdmin"];
+function show(id){ screens.forEach(s=>$(s).classList.toggle("hidden", s!==id)); window.scrollTo(0,0); }
 
-function show(screen){
-  ["scRegister","scQuiz","scResult","scAdmin"].forEach(s=>$(s).classList.toggle("hide", s!==screen));
-  window.scrollTo({top:0,behavior:"instant"});
-}
-function notice(host, kind, html){
-  $(host).innerHTML = html ? '<div class="notice '+kind+'">'+html+'</div>' : "";
-}
-function sanitiseEmp(v){ return (v||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
-function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+/* ───────── details + start ───────── */
+async function startTest(){
+  const emp   = $("empCode").value.trim().toUpperCase();
+  const mob   = $("mobile").value.trim();
+  const name  = $("fullName").value.trim();
+  const errEl = $("detailErr");
+  errEl.style.display = "none";
 
-/* ============================================================
-   REGISTRATION
-   ============================================================ */
-function validateForm(){
-  let ok = true;
-  const name = $("fName").value.trim();
-  const emp  = sanitiseEmp($("fEmp").value);
-  const mob  = $("fMob").value.replace(/\D/g,"").replace(/^91(?=\d{10}$)/,"");
+  if(!emp){ return showErr(errEl,"Please enter your Employee code."); }
+  if(!/^[0-9]{10}$/.test(mob)){ return showErr(errEl,"Please enter a valid 10-digit mobile number."); }
+  if(name.length < 2){ return showErr(errEl,"Please enter your full name."); }
 
-  const set=(f,e,bad)=>{ $(f).classList.toggle("bad",bad); $(e).classList.toggle("on",bad); if(bad) ok=false; };
-  set("fName","eName", name.length < 2);
-  set("fEmp","eEmp",  emp.length < 2);
-  set("fMob","eMob",  !/^[6-9]\d{9}$/.test(mob));
+  $("startBtn").disabled = true;
+  $("startBtn").textContent = "Checking…";
 
-  return ok ? {name, emp, mobile:mob} : null;
-}
-
-async function startAssessment(){
-  notice("regNotice","", "");
-  const c = validateForm();
-  if(!c) return;
-
-  $("btnStart").disabled = true;
-  $("regBusy").classList.remove("hide");
-
-  if(CONFIG.oneAttempt){
+  if(ONE_ATTEMPT){
     try{
-      const found = await window.storage.list(PREFIX + "result:" + c.emp + ":", true);
-      if(found && found.keys && found.keys.length){
-        $("btnStart").disabled = false;
-        $("regBusy").classList.add("hide");
-        notice("regNotice","bad",
-          "<p><b>This employee code has already submitted the assessment.</b></p>"+
-          "<p>Only one attempt is allowed. If this is a mistake, contact your training coordinator.</p>");
-        return;
+      const existing = await window.storage.get("result:"+emp, true);
+      if(existing){
+        $("startBtn").disabled = false;
+        $("startBtn").textContent = "Start test";
+        return showErr(errEl,"This Employee code has already attempted the test. Only one attempt is allowed.");
       }
-    }catch(e){ /* no record found — proceed */ }
+    }catch(e){ /* key not found → OK to proceed */ }
   }
 
-  S.candidate = c;
-  S.order     = QUESTIONS.map(q=>q.id);
-  if(CONFIG.shuffle){
-    for(let i=S.order.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [S.order[i],S.order[j]] = [S.order[j],S.order[i]];
-    }
+  candidate = { emp, mob, name };
+  answers   = new Array(QUESTIONS.length).fill(null);
+  current   = 0;
+  submitted = false;
+  $("startBtn").disabled = false;
+  $("startBtn").textContent = "Start test";
+  renderQ();
+  show("screenQuiz");
+}
+function showErr(el,msg){ el.textContent = msg; el.style.display = "block"; }
+
+/* ───────── quiz rendering ───────── */
+function renderQ(){
+  const q = QUESTIONS[current];
+  $("qText").textContent = (current+1)+". "+q.q;
+  const box = $("optBox"); box.innerHTML = "";
+  q.options.forEach((opt,i)=>{
+    const div = document.createElement("div");
+    div.className = "opt"+(answers[current]===i?" selected":"");
+    div.setAttribute("role","button"); div.tabIndex = 0;
+    div.innerHTML = '<span class="dot"></span><span>'+escapeHtml(opt)+'</span>';
+    div.onclick = ()=>{ answers[current]=i; renderQ(); };
+    div.onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();div.click();} };
+    box.appendChild(div);
+  });
+  $("progNum").textContent = (current+1)+" / "+QUESTIONS.length;
+  $("progFill").style.width = ((current+1)/QUESTIONS.length*100)+"%";
+  $("prevBtn").style.visibility = current===0 ? "hidden" : "visible";
+  const last = current === QUESTIONS.length-1;
+  $("nextBtn").classList.toggle("hidden", last);
+  $("submitBtn").classList.toggle("hidden", !last);
+}
+function nextQ(){ if(current < QUESTIONS.length-1){ current++; renderQ(); } }
+function prevQ(){ if(current > 0){ current--; renderQ(); } }
+function escapeHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ───────── submit + save ───────── */
+async function submitTest(){
+  if(submitted) return;
+  const attempted = answers.filter(a=>a!==null).length;
+  const unanswered = QUESTIONS.length - attempted;
+  if(unanswered > 0){
+    if(!confirm("You have "+unanswered+" unanswered question(s).\n\nAre you sure you want to submit the test? You cannot change your answers after submitting.")) return;
+  } else {
+    if(!confirm("Are you sure you want to submit the test?\n\nYou cannot change your answers after submitting.")) return;
   }
-  S.answers   = {};
-  S.cursor    = 0;
-  S.startedAt = Date.now();
-
-  // try restoring an interrupted attempt
-  try{
-    const draft = await window.storage.get(PREFIX + "draft:" + c.emp, false);
-    if(draft){
-      const d = JSON.parse(draft.value);
-      if(d && d.order && d.order.length === QUESTIONS.length){
-        S.order     = d.order;
-        S.answers   = d.answers || {};
-        S.cursor    = d.cursor || 0;
-        S.startedAt = d.startedAt || S.startedAt;
-      }
-    }
-  }catch(e){ /* no draft */ }
-
-  $("btnStart").disabled = false;
-  $("regBusy").classList.add("hide");
-  $("stripWho").textContent = c.emp;
-  $("stripTot").textContent = QUESTIONS.length;
-  buildStrip();
-  renderQuestion();
-  show("scQuiz");
-}
-
-/* ============================================================
-   QUIZ
-   ============================================================ */
-function buildStrip(){
-  const strip = $("strip");
-  strip.innerHTML = "";
-  S.order.forEach((qid,i)=>{
-    const b = el("button","tick");
-    b.type = "button";
-    b.setAttribute("aria-label","Go to question "+(i+1));
-    b.onclick = ()=>{ S.cursor = i; renderQuestion(); };
-    strip.appendChild(b);
-  });
-}
-
-function paintStrip(){
-  const ticks = $("strip").children;
-  S.order.forEach((qid,i)=>{
-    ticks[i].className = "tick"
-      + (S.answers[qid] != null ? " done" : "")
-      + (i === S.cursor ? " here" : "");
-  });
-  $("stripDone").textContent = Object.keys(S.answers).length;
-}
-
-function renderQuestion(){
-  const qid = S.order[S.cursor];
-  const q   = QUESTIONS.find(x=>x.id===qid);
-
-  $("qNum").textContent  = "Q" + String(S.cursor+1).padStart(2,"0");
-  $("qSect").textContent = q.s;
-  $("qText").textContent = q.q;
-
-  const box = $("qOpts");
-  box.innerHTML = "";
-  q.o.forEach((text,idx)=>{
-    const b = el("button","opt" + (S.answers[qid]===idx ? " on" : ""));
-    b.type = "button";
-    b.appendChild(el("span","key",KEYS[idx]));
-    b.appendChild(el("span",null,text));
-    b.onclick = ()=>choose(qid, idx);
-    box.appendChild(b);
-  });
-
-  $("btnPrev").disabled = S.cursor === 0;
-  $("btnNext").disabled = S.cursor === S.order.length - 1;
-  $("btnNext").textContent = S.cursor === S.order.length - 1 ? "Last question" : "Next";
-  paintStrip();
-  checkPending();
-}
-
-function choose(qid, idx){
-  S.answers[qid] = idx;
-  renderQuestion();
-  saveDraft();
-  if(S.cursor < S.order.length - 1){
-    setTimeout(()=>{ S.cursor++; renderQuestion(); }, 180);
-  }
-}
-
-let draftTimer = null;
-function saveDraft(){
-  clearTimeout(draftTimer);
-  draftTimer = setTimeout(async ()=>{
-    try{
-      await window.storage.set(PREFIX + "draft:" + S.candidate.emp,
-        JSON.stringify({order:S.order, answers:S.answers, cursor:S.cursor, startedAt:S.startedAt}), false);
-    }catch(e){ /* draft saving is best effort */ }
-  }, 900);
-}
-
-function checkPending(){
-  const left = S.order.length - Object.keys(S.answers).length;
-  notice("submitNotice", left ? "warn" : "",
-    left ? "<p><b>"+left+" question"+(left>1?"s":"")+" still unanswered.</b> Unanswered questions score zero. Tap any bar above to jump straight to one.</p>"
-         : "<p>All "+S.order.length+" questions answered. You can review with <b>Back</b>, or submit now.</p>");
-}
-
-/* ============================================================
-   SUBMIT + SCORE
-   ============================================================ */
-async function submitAssessment(){
-  if(S.submitted) return;
-  const left = S.order.length - Object.keys(S.answers).length;
-  if(left && !confirm(left+" question"+(left>1?"s are":" is")+" unanswered and will score zero.\n\nSubmit anyway?")) return;
-  if(!left && !confirm("Submit your answers?\n\nYou cannot change them after this.")) return;
-
-  S.submitted = true;
-  $("btnSubmit").disabled = true;
-  $("quizBusy").classList.remove("hide");
+  submitted = true;
 
   let correct = 0;
-  QUESTIONS.forEach(q=>{ if(S.answers[q.id] === q.a) correct++; });
+  QUESTIONS.forEach((q,i)=>{ if(answers[i]===q.answer) correct++; });
 
-  const attempted = Object.keys(S.answers).length;
-  const total     = QUESTIONS.length;
-  const percent   = Math.round(correct / total * 1000) / 10;
-  const now       = Date.now();
-  const seconds   = Math.round((now - S.startedAt) / 1000);
+  $("scoreVal").textContent  = correct;
+  $("resultName").textContent = candidate.name;
+  $("resultMeta").textContent = "Emp code: "+candidate.emp+"  •  Mobile: "+candidate.mob;
+  $("stTotal").textContent   = QUESTIONS.length;
+  $("stAttempt").textContent = attempted;
+  $("stCorrect").textContent = correct;
+  show("screenResult");
 
   const record = {
-    name       : S.candidate.name,
-    emp        : S.candidate.emp,
-    mobile     : S.candidate.mobile,
-    total      : total,
-    attempted  : attempted,
-    score      : correct,
-    percent    : percent,
-    result     : percent >= CONFIG.passMark ? "PASS" : "REVIEW",
-    startedAt  : new Date(S.startedAt).toISOString(),
-    submittedAt: new Date(now).toISOString(),
-    seconds    : seconds,
-    answers    : S.answers
+    empCode: candidate.emp,
+    name: candidate.name,
+    mobile: candidate.mob,
+    totalQuestions: QUESTIONS.length,
+    attempted: attempted,
+    score: correct,
+    percent: Math.round(correct/QUESTIONS.length*100),
+    submittedAt: new Date().toLocaleString("en-IN")
   };
-
-  let saved = true;
+  const note = $("saveNote");
   try{
-    await window.storage.set(PREFIX + "result:" + S.candidate.emp + ":" + now, JSON.stringify(record), true);
-  }catch(e){ saved = false; }
-  try{ await window.storage.delete(PREFIX + "draft:" + S.candidate.emp, false); }catch(e){}
-
-  $("quizBusy").classList.add("hide");
-  renderResult(record, saved);
-  show("scResult");
+    const res = await window.storage.set("result:"+candidate.emp, JSON.stringify(record), true);
+    if(res){ note.textContent = "✓ Your record has been saved successfully."; note.className = "save-note ok"; }
+    else   { note.textContent = "Record could not be saved. Please inform the administrator."; note.className = "save-note bad"; }
+  }catch(e){
+    note.textContent = "Record could not be saved. Please inform the administrator.";
+    note.className = "save-note bad";
+  }
 }
 
-function fmtTime(sec){
-  const m = Math.floor(sec/60), s = sec%60;
-  return m ? m+"m "+String(s).padStart(2,"0")+"s" : s+"s";
+/* ───────── admin ───────── */
+function openAdminLogin(){ $("adminErr").style.display="none"; $("adminPass").value=""; show("screenAdminLogin"); }
+function backHome(){ show("screenDetails"); }
+async function checkAdmin(){
+  if($("adminPass").value !== ADMIN_PASS){ $("adminErr").style.display="block"; return; }
+  show("screenAdmin");
+  loadRecords();
 }
-
-function renderResult(r, saved){
-  const passed = r.percent >= CONFIG.passMark;
-  $("resBand").textContent = passed ? "Passed" : "Below pass mark";
-  $("resBand").className   = "band " + (passed ? "pass" : "fail");
-  $("resScore").textContent = r.score;
-  $("resTotal").textContent = r.total;
-  $("resPct").textContent   = r.percent + "%  ·  pass mark " + CONFIG.passMark + "%";
-  $("resAtt").textContent   = r.attempted;
-  $("resCor").textContent   = r.score;
-  $("resTime").textContent  = fmtTime(r.seconds);
-
-  $("resName").textContent = r.name;
-  $("resEmp").textContent  = r.emp;
-  $("resMob").textContent  = r.mobile;
-  $("resWhen").textContent = new Date(r.submittedAt).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"});
-
-  notice("saveNotice", saved ? "" : "bad",
-    saved ? "<p>Your result has been saved. Please take a screenshot of this screen for your own reference.</p>"
-          : "<p><b>Your score could not be saved to the server.</b> Screenshot this screen and send it to your training coordinator.</p>");
-
-  $("mastSub").textContent = "Assessment complete.";
-
-  if(!CONFIG.showReview){ $("reviewCard").classList.add("hide"); return; }
-
-  const list = $("reviewList");
-  list.innerHTML = "";
-  S.order.forEach((qid,i)=>{
-    const q      = QUESTIONS.find(x=>x.id===qid);
-    const picked = S.answers[qid];
-    const state  = picked == null ? "skip" : (picked === q.a ? "ok" : "no");
-
-    const wrap = el("div","review-q");
-    const head = el("div","rq-head");
-    head.appendChild(el("span",null,"Q"+String(i+1).padStart(2,"0")));
-    head.appendChild(el("span","mark "+state, state==="ok" ? "Correct" : state==="no" ? "Incorrect" : "Not answered"));
-    wrap.appendChild(head);
-    wrap.appendChild(el("p","rq-text",q.q));
-
-    if(picked != null && picked !== q.a){
-      const p = el("p","rq-line"); p.innerHTML = "You chose: <b>"+KEYS[picked]+". "+esc(q.o[picked])+"</b>";
-      wrap.appendChild(p);
+let cachedRecords = [];
+async function loadRecords(){
+  $("recCount").textContent = "Loading…";
+  $("recBody").innerHTML = "";
+  cachedRecords = [];
+  try{
+    const listing = await window.storage.list("result:", true);
+    const keys = (listing && listing.keys) ? listing.keys : [];
+    for(const k of keys){
+      try{
+        const item = await window.storage.get(k, true);
+        if(item && item.value) cachedRecords.push(JSON.parse(item.value));
+      }catch(e){}
     }
-    const c = el("p","rq-line");
-    c.innerHTML = "Correct answer: <b>"+KEYS[q.a]+". "+esc(q.o[q.a])+"</b>";
-    wrap.appendChild(c);
-    list.appendChild(wrap);
+  }catch(e){}
+  cachedRecords.sort((a,b)=> b.score - a.score);
+  const body = $("recBody");
+  cachedRecords.forEach((r,i)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>"+(i+1)+"</td><td>"+escapeHtml(r.empCode)+"</td><td>"+escapeHtml(r.name)+
+      "</td><td>"+escapeHtml(r.mobile)+"</td><td>"+r.totalQuestions+"</td><td>"+r.attempted+
+      "</td><td><b>"+r.score+"</b></td><td>"+r.percent+"%</td><td>"+escapeHtml(r.submittedAt)+"</td>";
+    body.appendChild(tr);
   });
+  $("recCount").textContent = cachedRecords.length + " candidate(s) have submitted the test.";
+  $("emptyMsg").classList.toggle("hidden", cachedRecords.length>0);
+  $("recTable").classList.toggle("hidden", cachedRecords.length===0);
 }
-
-/* ============================================================
-   ADMIN
-   ============================================================ */
-let ADMIN_ROWS = [];
-
-async function loadResults(){
-  $("adminBusy").textContent = "Reading submissions…";
-  $("adminCount").textContent = "Loading…";
-  ADMIN_ROWS = [];
-
-  let keys = [];
-  try{
-    const r = await window.storage.list(PREFIX + "result:", true);
-    keys = (r && r.keys) ? r.keys : [];
-  }catch(e){ keys = []; }
-
-  for(let i=0;i<keys.length;i+=5){
-    const slice = keys.slice(i,i+5);
-    const got = await Promise.all(slice.map(async k=>{
-      try{ const v = await window.storage.get(k,true); return JSON.parse(v.value); }
-      catch(e){ return null; }
-    }));
-    got.forEach(g=>{ if(g) ADMIN_ROWS.push(g); });
-    $("adminBusy").textContent = "Read " + Math.min(i+5,keys.length) + " of " + keys.length + "…";
-  }
-
-  ADMIN_ROWS.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
-  $("adminBusy").textContent = "";
-  renderAdmin();
-}
-
-function renderAdmin(){
-  $("adminCount").textContent = ADMIN_ROWS.length
-    ? ADMIN_ROWS.length + " submission" + (ADMIN_ROWS.length>1?"s":"")
-    : "No submissions yet";
-
-  const t = $("adminTable");
-  t.innerHTML = "";
-  if(!ADMIN_ROWS.length){
-    t.innerHTML = '<tr><td style="color:var(--muted);white-space:normal">Results will appear here as candidates submit. Share the link and check back.</td></tr>';
-    return;
-  }
-
-  const head = ["#","Name","Emp code","Mobile","Attempted","Score","Total","%","Result","Time","Submitted"];
-  const tr = document.createElement("tr");
-  head.forEach(h=>tr.appendChild(el("th",null,h)));
-  t.appendChild(tr);
-
-  ADMIN_ROWS.forEach((r,i)=>{
-    const row = document.createElement("tr");
-    const cells = [
-      [i+1,"mono"],[r.name,""],[r.emp,"mono"],[r.mobile,"mono"],
-      [r.attempted,"mono"],[r.score,"mono"],[r.total,"mono"],[r.percent+"%","mono"],
-      [r.result,""],[fmtTime(r.seconds),"mono"],
-      [new Date(r.submittedAt).toLocaleString("en-IN",{dateStyle:"short",timeStyle:"short"}),"mono"]
-    ];
-    cells.forEach(([v,c])=>row.appendChild(el("td",c,v)));
-    t.appendChild(row);
+function downloadCSV(){
+  if(cachedRecords.length===0){ alert("No records to download yet."); return; }
+  let csv = "Sr No,Emp Code,Name,Mobile,Total Questions,Attempted,Score,Percent,Submitted At\n";
+  cachedRecords.forEach((r,i)=>{
+    csv += [i+1, r.empCode, '"'+r.name.replace(/"/g,'""')+'"', r.mobile, r.totalQuestions,
+            r.attempted, r.score, r.percent+"%", '"'+r.submittedAt+'"'].join(",")+"\n";
   });
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "candidate-results.csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
-
-function buildCsv(){
-  const head = ["Name","EmpCode","Mobile","TotalQuestions","Attempted","Score","Percent","Result","TimeSeconds","SubmittedAt"];
-  const q = v => '"' + String(v==null?"":v).replace(/"/g,'""') + '"';
-  const lines = [head.join(",")];
-  ADMIN_ROWS.forEach(r=>lines.push([
-    r.name, r.emp, r.mobile, r.total, r.attempted, r.score, r.percent, r.result, r.seconds,
-    new Date(r.submittedAt).toLocaleString("en-IN")
-  ].map(q).join(",")));
-  const csv = lines.join("\n");
-  $("csvBox").value = csv;
-  $("csvBox").classList.remove("hide");
-  return csv;
-}
-
-/* ============================================================
-   WIRING
-   ============================================================ */
-$("btnStart").onclick = startAssessment;
-["fName","fEmp","fMob"].forEach(id=>{
-  $(id).addEventListener("keydown", e=>{ if(e.key==="Enter") startAssessment(); });
-  $(id).addEventListener("input", ()=>{ $(id).classList.remove("bad"); });
-});
-$("fMob").addEventListener("input", e=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,10); });
-
-$("btnPrev").onclick = ()=>{ if(S.cursor>0){ S.cursor--; renderQuestion(); } };
-$("btnNext").onclick = ()=>{ if(S.cursor<S.order.length-1){ S.cursor++; renderQuestion(); } };
-$("btnSubmit").onclick = submitAssessment;
-
-document.addEventListener("keydown", e=>{
-  if($("scQuiz").classList.contains("hide")) return;
-  if(e.target.tagName === "INPUT") return;
-  const k = e.key.toUpperCase();
-  if(["A","B","C","D"].includes(k)) choose(S.order[S.cursor], KEYS.indexOf(k));
-  if(e.key === "ArrowRight") $("btnNext").click();
-  if(e.key === "ArrowLeft")  $("btnPrev").click();
-});
-
-$("adminLink").onclick = e=>{ e.preventDefault(); show("scAdmin"); $("fPass").focus(); };
-$("btnPassBack").onclick = ()=>show("scRegister");
-$("btnAdminBack").onclick = ()=>show("scRegister");
-$("fPass").addEventListener("keydown", e=>{ if(e.key==="Enter") $("btnPass").click(); });
-$("btnPass").onclick = ()=>{
-  if($("fPass").value !== CONFIG.adminPasscode){
-    $("ePass").classList.add("on"); $("fPass").classList.add("bad"); return;
-  }
-  $("ePass").classList.remove("on"); $("fPass").classList.remove("bad");
-  $("adminGate").classList.add("hide");
-  $("adminPanel").classList.remove("hide");
-  loadResults();
-};
-$("btnRefresh").onclick = loadResults;
-$("btnCsv").onclick = buildCsv;
-$("btnCopy").onclick = async ()=>{
-  const csv = buildCsv();
-  try{ await navigator.clipboard.writeText(csv); $("btnCopy").textContent = "Copied"; }
-  catch(e){ $("csvBox").select(); $("btnCopy").textContent = "Select all and copy"; }
-  setTimeout(()=>{ $("btnCopy").textContent = "Copy CSV"; }, 2200);
-};
-
-window.addEventListener("beforeunload", e=>{
-  if(!S.candidate || S.submitted) return;
-  e.preventDefault(); e.returnValue = "";
-});
-
-$("briefAttempts").textContent = CONFIG.oneAttempt
-  ? "One attempt per employee code" : "Multiple attempts allowed";
-$("stripTot").textContent = QUESTIONS.length;
+</script>
+</body>
+</html>
