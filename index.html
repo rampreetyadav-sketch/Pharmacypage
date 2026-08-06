@@ -224,8 +224,13 @@
    ▼▼▼  EDIT THIS SECTION ONLY — put your own settings here  ▼▼▼
    ════════════════════════════════════════════════════════════ */
 const QUIZ_TITLE   = "Apollo Training Assessment";   // shown at top
-const ADMIN_PASS   = "254177083";              // change this passcode
+const ADMIN_PASS   = "admin@123";              // change this passcode
 const ONE_ATTEMPT  = true;                     // true = each Emp Code can attempt only once
+
+/* GOOGLE SHEET CONNECTION — paste your Apps Script Web App URL between the quotes.
+   Follow the setup steps given by Claude. It looks like:
+   https://script.google.com/macros/s/AKfycb.../exec                     */
+const SHEET_API_URL = "";
 
 /* QUESTIONS — replace these SAMPLE questions with your real ones.
    "answer" is the index of the correct option: 0 = first, 1 = second, 2 = third, 3 = fourth */
@@ -332,13 +337,23 @@ async function startTest(){
 
   if(ONE_ATTEMPT){
     try{
-      const existing = await window.storage.get("result:"+emp, true);
-      if(existing){
-        $("startBtn").disabled = false;
-        $("startBtn").textContent = "Start test";
-        return showErr(errEl,"This Employee code has already attempted the test. Only one attempt is allowed.");
+      if(SHEET_API_URL){
+        const r = await fetch(SHEET_API_URL+"?action=check&emp="+encodeURIComponent(emp));
+        const j = await r.json();
+        if(j.exists){
+          $("startBtn").disabled = false;
+          $("startBtn").textContent = "Start test";
+          return showErr(errEl,"This Employee code has already attempted the test. Only one attempt is allowed.");
+        }
+      } else if(typeof window.storage !== "undefined"){
+        const existing = await window.storage.get("result:"+emp, true);
+        if(existing){
+          $("startBtn").disabled = false;
+          $("startBtn").textContent = "Start test";
+          return showErr(errEl,"This Employee code has already attempted the test. Only one attempt is allowed.");
+        }
       }
-    }catch(e){ /* key not found → OK to proceed */ }
+    }catch(e){ /* not found / network issue → allow to proceed */ }
   }
 
   candidate = { emp, mob, name };
@@ -412,11 +427,24 @@ async function submitTest(){
   };
   const note = $("saveNote");
   try{
-    const res = await window.storage.set("result:"+candidate.emp, JSON.stringify(record), true);
-    if(res){ note.textContent = "✓ Your record has been saved successfully."; note.className = "save-note ok"; }
-    else   { note.textContent = "Record could not be saved. Please inform the administrator."; note.className = "save-note bad"; }
+    if(SHEET_API_URL){
+      const r = await fetch(SHEET_API_URL, {
+        method:"POST",
+        headers:{ "Content-Type":"text/plain;charset=utf-8" },
+        body: JSON.stringify(record)
+      });
+      const j = await r.json();
+      if(j.saved){ note.textContent = "✓ Your record has been saved successfully."; note.className = "save-note ok"; }
+      else throw new Error("save failed");
+    } else if(typeof window.storage !== "undefined"){
+      const res = await window.storage.set("result:"+candidate.emp, JSON.stringify(record), true);
+      if(res){ note.textContent = "✓ Your record has been saved successfully."; note.className = "save-note ok"; }
+      else throw new Error("save failed");
+    } else {
+      throw new Error("no storage configured");
+    }
   }catch(e){
-    note.textContent = "Record could not be saved. Please inform the administrator.";
+    note.textContent = "Record could not be saved. Please take a screenshot of this page and send it to the administrator.";
     note.className = "save-note bad";
   }
 }
@@ -435,22 +463,28 @@ async function loadRecords(){
   $("recBody").innerHTML = "";
   cachedRecords = [];
   try{
-    const listing = await window.storage.list("result:", true);
-    const keys = (listing && listing.keys) ? listing.keys : [];
-    for(const k of keys){
-      try{
-        const item = await window.storage.get(k, true);
-        if(item && item.value) cachedRecords.push(JSON.parse(item.value));
-      }catch(e){}
+    if(SHEET_API_URL){
+      const r = await fetch(SHEET_API_URL+"?action=list");
+      const j = await r.json();
+      cachedRecords = (j.rows || []);
+    } else if(typeof window.storage !== "undefined"){
+      const listing = await window.storage.list("result:", true);
+      const keys = (listing && listing.keys) ? listing.keys : [];
+      for(const k of keys){
+        try{
+          const item = await window.storage.get(k, true);
+          if(item && item.value) cachedRecords.push(JSON.parse(item.value));
+        }catch(e){}
+      }
     }
   }catch(e){}
-  cachedRecords.sort((a,b)=> b.score - a.score);
+  cachedRecords.sort((a,b)=> (b.score||0) - (a.score||0));
   const body = $("recBody");
   cachedRecords.forEach((r,i)=>{
     const tr = document.createElement("tr");
-    tr.innerHTML = "<td>"+(i+1)+"</td><td>"+escapeHtml(r.empCode)+"</td><td>"+escapeHtml(r.name)+
-      "</td><td>"+escapeHtml(r.mobile)+"</td><td>"+r.totalQuestions+"</td><td>"+r.attempted+
-      "</td><td><b>"+r.score+"</b></td><td>"+r.percent+"%</td><td>"+escapeHtml(r.submittedAt)+"</td>";
+    tr.innerHTML = "<td>"+(i+1)+"</td><td>"+escapeHtml(String(r.empCode||""))+"</td><td>"+escapeHtml(String(r.name||""))+
+      "</td><td>"+escapeHtml(String(r.mobile||""))+"</td><td>"+(r.totalQuestions||"")+"</td><td>"+(r.attempted||0)+
+      "</td><td><b>"+(r.score||0)+"</b></td><td>"+(String(r.percent||"").replace("%","")||0)+"%</td><td>"+escapeHtml(String(r.submittedAt||""))+"</td>";
     body.appendChild(tr);
   });
   $("recCount").textContent = cachedRecords.length + " candidate(s) have submitted the test.";
